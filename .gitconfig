@@ -1,0 +1,10 @@
+[user]
+	email = jackson.hardaker@gmail.com
+	name = Jackson Hardaker
+[core]
+	editor = vim
+[alias]
+	d = branch -D
+	rb = reset --soft \"HEAD^\"
+	co = checkout
+	cp = cherry-pick
