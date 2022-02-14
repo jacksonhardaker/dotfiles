@@ -1,4 +1,7 @@
+tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/core"
+tap "homebrew/services"
 tap "buo/cask-upgrade"
 brew "mas"
 
@@ -8,3 +11,7 @@ brew "deno"
 brew "thefuck"
 brew "fzf"
 brew "gh"
+brew "httpie"
+brew "gawk"
+
+cask "graphiql"
