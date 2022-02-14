@@ -69,7 +69,6 @@ ZSH_THEME="avit"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
-plugins+=(zsh-nvm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -98,12 +97,41 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-eval "$(rbenv init -)"
 
-function command_not_found_handler() {
-  if test -f "package.json"; then
-    npm run "$@"
-  else
-    echo "command not found: $@"
+eval $(thefuck --alias)
+
+# Fuzzy search pr list
+alias fpr='gh pr list | fzf --preview "gh pr diff --color=always {+1}" |  { read first rest ; echo $first ; } | xargs gh pr checkout'
+# View current PR in github
+alias vpr='gh pr view --web'
+
+# Get current external IP address
+alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
+
+# yarn
+alias yls='yarn list --pattern'
+
+# Clean node_modules
+alias clean='echo "rm -rf ./node_modules" && rm -rf ./node_modules'
+
+# Fuzzy search package.json scripts
+pkg() {
+  if [ -f "package.json" ]; then
+    command=$(jq .scripts package.json | fzf | awk 'match($0, /"(.+)":/, m) { print m[1] }')
+    echo "npm run $command" | pbcopy
+    npm run $command
   fi
 }
+
+# Fills the given port
+killport() {
+  kill -9 $(lsof -t -i :$1)
+}
+
+# Homebrew Shell Completion
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+
+  autoload -Uz compinit
+  compinit
+fi
