@@ -1,3 +1,7 @@
+tap "homebrew/cask"
+tap "buo/cask-upgrade"
+brew "mas"
+
 brew "jq"
 brew "delta"
 brew "deno"
