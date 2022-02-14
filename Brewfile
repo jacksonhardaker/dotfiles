@@ -12,6 +12,6 @@ brew "thefuck"
 brew "fzf"
 brew "gh"
 brew "httpie"
-brew "gawk"
 
+cask "ngrok"
 cask "graphiql"
