@@ -1,0 +1,6 @@
+brew "jq"
+brew "delta"
+brew "deno"
+brew "thefuck"
+brew "fzf"
+brew "gh"
