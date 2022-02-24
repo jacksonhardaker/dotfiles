@@ -6,7 +6,7 @@ tap "buo/cask-upgrade"
 brew "mas"
 
 brew "jq"
-brew "delta"
+brew "git-delta"
 brew "deno"
 brew "thefuck"
 brew "fzf"
