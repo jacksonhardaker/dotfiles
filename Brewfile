@@ -15,3 +15,4 @@ brew "httpie"
 
 cask "ngrok"
 cask "graphiql"
+cask "rectangle"
