@@ -12,6 +12,7 @@ brew "thefuck"
 brew "fzf"
 brew "gh"
 brew "httpie"
+brew "switchaudio-osx"
 
 cask "ngrok"
 cask "graphiql"
