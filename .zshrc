@@ -98,6 +98,13 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Source all files in .zsh/
+for file in ~/.zsh/*.zsh; do
+  if [[ -f $file ]]; then
+    source $file
+  fi
+done
+
 eval $(thefuck --alias)
 
 # Fuzzy search pr list
