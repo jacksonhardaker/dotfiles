@@ -107,11 +107,6 @@ done
 
 eval $(thefuck --alias)
 
-# Fuzzy search pr list
-alias fpr='gh pr list | fzf --preview "gh pr diff --color=always {+1}" |  { read first rest ; echo $first ; } | xargs gh pr checkout'
-# View current PR in github
-alias vpr='gh pr view --web'
-
 # Get current external IP address
 alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
 
