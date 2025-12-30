@@ -238,17 +238,9 @@ wt() {
         git pull --ff-only
       ;;
 
-    *)
-      echo "wt: unknown command '$cmd'" >&2
-      _wt_usage >&2
-      return 1
-      ;;
-  esac
-}
-
-
+    
 # Fuzzy search pr list and checkout with wt
-fpr() {
+fpr)
   local pr_num branch repo
   
   # Find the control repo first so we can run gh from there
@@ -264,4 +256,12 @@ fpr() {
   [[ -z "$branch" ]] && { echo "Could not get branch name"; return 1; }
   
   wt co "$branch"
+  ;;
+
+    *)
+      echo "wt: unknown command '$cmd'" >&2
+      _wt_usage >&2
+      return 1
+      ;;
+  esac
 }
