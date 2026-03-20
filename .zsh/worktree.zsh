@@ -84,6 +84,7 @@ _wt_usage() {
 wt - git worktree workflow helper
 
 Usage:
+  wt init <url> [dir]             bare-clone <url> and cd into a "main" worktree
   wt co <branch>                  cd to (or create) a worktree for <branch>
   wt new <branch> [base]          create a new branch worktree from [base]
   wt debug <remote-branch>        detached worktree from origin/<remote-branch> (safe)
@@ -95,7 +96,8 @@ Usage:
 Notes:
   Worktrees live as siblings to the control repo i.e.
   root/
-    bdfe.git/          <- control repo
+    bdfe.git/          <- control repo (bare clone)
+    main/             <- worktree for "main" (created by init)
     feature-foo/      <- worktree for branch "feature/foo"
     bugfix-bar/       <- worktree for branch "bugfix/bar"
 
@@ -111,6 +113,54 @@ wt() {
     ""|-h|--help|help)
       _wt_usage
       return 0
+      ;;
+
+    init)
+      local url="$1"
+      local dir="$2"
+
+      if [[ -z "$url" ]]; then
+        echo "wt init: missing <url>" >&2
+        echo "Usage: wt init <url> [dir]" >&2
+        return 1
+      fi
+
+      # Derive directory name from URL if not provided
+      # e.g. git@github.com:org/my-repo.git -> my-repo
+      if [[ -z "$dir" ]]; then
+        dir=$(basename "$url" .git)
+      fi
+
+      local container="$(pwd)/$dir"
+      local bare_dir="${container}/${dir}.git"
+
+      if [[ -d "$bare_dir" ]]; then
+        echo "wt init: $bare_dir already exists" >&2
+        return 1
+      fi
+
+      mkdir -p "$container" || return 1
+      echo "Cloning (bare) into ${bare_dir}..."
+      git clone --bare "$url" "$bare_dir" || return 1
+
+      # Configure the bare repo to fetch all remote branches
+      git -C "$bare_dir" config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*' || return 1
+      git -C "$bare_dir" fetch --all --prune || return 1
+
+      # Determine the default branch
+      local default_branch
+      default_branch=$(git -C "$bare_dir" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's#refs/remotes/origin/##')
+      if [[ -z "$default_branch" ]]; then
+        default_branch="main"
+      fi
+
+      # Create a worktree for the default branch
+      local wtpath="${container}/${default_branch}"
+      git -C "$bare_dir" worktree add "$wtpath" "$default_branch" || return 1
+
+      cd "$wtpath" || return 1
+      echo "Ready. Control repo: $bare_dir"
+      echo "Worktree: $wtpath"
       ;;
 
     co)
